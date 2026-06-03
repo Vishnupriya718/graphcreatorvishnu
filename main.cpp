@@ -1,30 +1,30 @@
-#Ainclude <iostream>
+#include <iostream>
 #include <vector>
 
 using namespace std;
 
 const int MAX = 20;
 
-// stores vertex labels
+// Stores all vertex labels
 vector<string> vertices;
 
-// adjacency table
+// Adjacency table for graph edges
+// -1 means no edge exists
 int adjacency[MAX][MAX];
 
-// add a vertex
+// Adds a new vertex to the graph
 void addVertex() {
     string label;
 
     cout << "Enter vertex label: ";
     cin >> label;
 
-    // add to vector
+    // Add vertex label to vector
     vertices.push_back(label);
 
     cout << "Vertex added!\n";
 }
-
-// print vertices (for testing)
+// Prints all current vertices
 void printVertices() {
 
     cout << "\nVertices:\n";
@@ -36,7 +36,8 @@ void printVertices() {
 
 int main() {
 
-    // initialize adjacency table
+    // Initialize adjacency table
+    // Every position starts with -1
     for (int i = 0; i < MAX; i++) {
         for (int j = 0; j < MAX; j++) {
             adjacency[i][j] = -1;
@@ -74,4 +75,17 @@ int main() {
     } while (choice != 3);
 
     return 0;
+}
+// Returns the index of a vertex label
+// Returns -1 if not found
+int findVertex(string label) {
+
+    for (int i = 0; i < vertices.size(); i++) {
+
+        if (vertices[i] == label) {
+            return i;
+        }
+    }
+
+    return -1;
 }
