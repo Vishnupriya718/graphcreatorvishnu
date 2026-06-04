@@ -34,6 +34,53 @@ void printVertices() {
     }
 }
 
+// Returns the index of a vertex label
+// Returns -1 if not found
+int findVertex(string label) {
+
+    for (int i = 0; i < vertices.size(); i++) {
+
+        if (vertices[i] == label) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// Adds a directed weighted edge
+void addEdge() {
+
+    string from;
+    string to;
+    int weight;
+
+    cout << "Enter starting vertex: ";
+    cin >> from;
+
+    cout << "Enter destination vertex: ";
+    cin >> to;
+
+    cout << "Enter edge weight: ";
+    cin >> weight;
+
+    int fromIndex = findVertex(from);
+    int toIndex = findVertex(to);
+
+    // Make sure both vertices exist
+    if (fromIndex == -1 || toIndex == -1) {
+        cout << "Vertex not found.\n";
+        return;
+    }
+
+    // Store the weight in the adjacency table
+    adjacency[fromIndex][toIndex] = weight;
+
+    cout << "Edge added!\n";
+}
+
+
+
 int main() {
 
     // Initialize adjacency table
@@ -49,8 +96,9 @@ int main() {
     do {
         cout << "\n--- MENU ---\n";
         cout << "1. Add Vertex\n";
-        cout << "2. Print Vertices\n";
-        cout << "3. Quit\n";
+        cout << "2. Add Edge\n";
+        cout << "3. Print Vertices\n";
+        cout << "4. Quit\n";
         cout << "Choice: ";
         cin >> choice;
 
@@ -60,11 +108,15 @@ int main() {
                 addVertex();
                 break;
 
-            case 2:
+	    case 2:
+	      addEdge();
+	      break;
+	  
+            case 3:
                 printVertices();
                 break;
 
-            case 3:
+            case 4:
                 cout << "Goodbye!\n";
                 break;
 
@@ -72,20 +124,7 @@ int main() {
                 cout << "Invalid choice.\n";
         }
 
-    } while (choice != 3);
+    } while (choice != 4);
 
     return 0;
-}
-// Returns the index of a vertex label
-// Returns -1 if not found
-int findVertex(string label) {
-
-    for (int i = 0; i < vertices.size(); i++) {
-
-        if (vertices[i] == label) {
-            return i;
-        }
-    }
-
-    return -1;
 }
