@@ -79,6 +79,67 @@ void addEdge() {
     cout << "Edge added!\n";
 }
 
+// Prints the adjacency table
+void printTable() {
+
+    cout << "\nAdjacency Table:\n\n";
+
+    // Print column headers
+    cout << "\t";
+
+    for (int i = 0; i < vertices.size(); i++) {
+        cout << vertices[i] << "\t";
+    }
+
+    cout << endl;
+
+    // Print rows
+    for (int i = 0; i < vertices.size(); i++) {
+
+        cout << vertices[i] << "\t";
+
+        for (int j = 0; j < vertices.size(); j++) {
+
+            if (adjacency[i][j] == -1) {
+                cout << "-\t";
+            }
+            else {
+                cout << adjacency[i][j] << "\t";
+            }
+        }
+
+        cout << endl;
+    }
+}
+
+// Removes an edge between two vertices
+void removeEdge() {
+
+    string from;
+    string to;
+
+    cout << "Enter starting vertex: ";
+    cin >> from;
+
+    cout << "Enter destination vertex: ";
+    cin >> to;
+
+    int fromIndex = findVertex(from);
+    int toIndex = findVertex(to);
+
+    // Make sure both vertices exist
+    if (fromIndex == -1 || toIndex == -1) {
+        cout << "Vertex not found.\n";
+        return;
+    }
+
+    // Remove edge by setting it back to -1
+    adjacency[fromIndex][toIndex] = -1;
+
+    cout << "Edge removed!\n";
+}
+
+
 
 
 int main() {
@@ -97,8 +158,10 @@ int main() {
         cout << "\n--- MENU ---\n";
         cout << "1. Add Vertex\n";
         cout << "2. Add Edge\n";
-        cout << "3. Print Vertices\n";
-        cout << "4. Quit\n";
+	cout << "3. Remove Edge\n";
+        cout << "4. Print Vertices\n";
+	cout << "5. Print Adjacency Table\n";
+        cout << "6. Quit\n";
         cout << "Choice: ";
         cin >> choice;
 
@@ -109,22 +172,30 @@ int main() {
                 break;
 
 	    case 2:
-	      addEdge();
-	      break;
-	  
-            case 3:
-                printVertices();
-                break;
+	       addEdge();
+	       break;
 
+	    case 3:
+	       removeEdge();
+	       break
+	  
             case 4:
-                cout << "Goodbye!\n";
-                break;
+               printVertices();
+               break;
+
+	    case 5:
+	       printTable();
+	       break;
+		
+            case 6:
+               cout << "Goodbye!\n";
+               break;
 
             default:
                 cout << "Invalid choice.\n";
         }
 
-    } while (choice != 4);
+    } while (choice != 6);
 
     return 0;
 }
