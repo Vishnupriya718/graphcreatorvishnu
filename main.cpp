@@ -138,9 +138,143 @@ void removeEdge() {
 
     cout << "Edge removed!\n";
 }
+// Removes a vertex and all associated edges
+void removeVertex() {
 
+    string label;
 
+    cout << "Enter vertex to remove: ";
+    cin >> label;
 
+    int index = findVertex(label);
+
+    // Make sure vertex exists
+    if (index == -1) {
+        cout << "Vertex not found.\n";
+        return;
+    }
+
+    int size = vertices.size();
+
+    // Shift rows up
+    for (int i = index; i < size - 1; i++) {
+
+        for (int j = 0; j < size; j++) {
+            adjacency[i][j] = adjacency[i + 1][j];
+        }
+    }
+
+    // Shift columns left
+    for (int j = index; j < size - 1; j++) {
+
+        for (int i = 0; i < size - 1; i++) {
+            adjacency[i][j] = adjacency[i][j + 1];
+        }
+    }
+
+    // Remove vertex from vector
+    vertices.erase(vertices.begin() + index);
+
+    cout << "Vertex removed!\n";
+}
+
+// Finds the shortest path using Dijkstra's Algorithm
+void shortestPath() {
+
+    string start;
+    string end;
+
+    cout << "Enter starting vertex: ";
+    cin >> start;
+
+    cout << "Enter ending vertex: ";
+    cin >> end;
+
+    int startIndex = findVertex(start);
+    int endIndex = findVertex(end);
+
+    // Make sure both vertices exist
+    if (startIndex == -1 || endIndex == -1) {
+        cout << "Vertex not found.\n";
+        return;
+    }
+
+    int size = vertices.size();
+
+    vector<int> distance(size, numeric_limits<int>::max());
+    vector<bool> visited(size, false);
+    vector<int> previous(size, -1);
+
+    distance[startIndex] = 0;
+
+    // Dijkstra's Algorithm
+    for (int count = 0; count < size; count++) {
+
+        int current = -1;
+        int smallest = numeric_limits<int>::max();
+
+        // Find unvisited vertex with smallest distance
+        for (int i = 0; i < size; i++) {
+
+            if (!visited[i] && distance[i] < smallest) {
+                smallest = distance[i];
+                current = i;
+            }
+        }
+
+        if (current == -1) {
+            break;
+        }
+
+        visited[current] = true;
+        // Check neighbors
+        for (int i = 0; i < size; i++) {
+
+            if (adjacency[current][i] != -1) {
+
+                int newDistance =
+                    distance[current] + adjacency[current][i];
+
+                if (newDistance < distance[i]) {
+
+                    distance[i] = newDistance;
+                    previous[i] = current;
+                }
+            }
+        }
+    }
+
+    // No path exists
+    if (distance[endIndex] == numeric_limits<int>::max()) {
+        cout << "No path exists.\n";
+        return;
+    }
+    // Build path
+    vector<int> path;
+
+    int current = endIndex;
+
+    while (current != -1) {
+
+        path.push_back(current);
+        current = previous[current];
+    }
+
+    cout << "\nShortest Path: ";
+
+    for (int i = path.size() - 1; i >= 0; i--) {
+
+        cout << vertices[path[i]];
+
+        if (i > 0) {
+            cout << " -> ";
+        }
+    }
+
+    cout << "\nTotal Weight: "
+         << distance[endIndex]
+         << endl;
+}
 
 int main() {
 
@@ -158,10 +292,12 @@ int main() {
         cout << "\n--- MENU ---\n";
         cout << "1. Add Vertex\n";
         cout << "2. Add Edge\n";
-	cout << "3. Remove Edge\n";
-        cout << "4. Print Vertices\n";
-	cout << "5. Print Adjacency Table\n";
-        cout << "6. Quit\n";
+	cout << "3. Remove Vertex\n";
+	cout << "4. Remove Edge\n";
+        cout << "5. Print Vertices\n";
+	cout << "6. Print Adjacency Table\n";
+        cout << "7. Find Shortest Path\n";
+	cout << "8. Quit\n";
         cout << "Choice: ";
         cin >> choice;
 
@@ -176,18 +312,28 @@ int main() {
 	       break;
 
 	    case 3:
+	       removeVertex();
+	       break;
+
+	    case 4:
 	       removeEdge();
-	       break
+	       break;
 	  
-            case 4:
+            case 5:
                printVertices();
                break;
 
-	    case 5:
+	    case 6:
 	       printTable();
 	       break;
-		
-            case 6:
+
+
+	    case 7:
+	       shortestPath();
+	       break;
+
+	       
+            case 8:
                cout << "Goodbye!\n";
                break;
 
@@ -195,7 +341,7 @@ int main() {
                 cout << "Invalid choice.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 8);
 
     return 0;
 }
